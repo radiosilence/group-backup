@@ -1,0 +1,17 @@
+node_modules/
+
+/node_modules
+/build
+/bundle
+/android
+/ios
+/.idea
+
+# No need to put the docs in npm
+/dist
+
+**/*.options.js
+**/*.env
+config/local.*
+
+*.backup.*

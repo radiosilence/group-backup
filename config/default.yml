@@ -1,0 +1,8 @@
+facebook:
+  apiVersion: v2.12
+  pageLimit: 0
+  groups:
+    - name: GROUP_NAME
+      id: GROUP_ID
+
+  accessToken: ACCESS_TOKEN
