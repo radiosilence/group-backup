@@ -56,3 +56,13 @@ export interface Comment {
     message: string
     from: Person
 }
+
+export interface MembersResponse {
+    data: Person[]
+    paging: {
+        cursors: {
+            before: string
+            after: string
+        }
+    }
+}
