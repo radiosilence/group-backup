@@ -73,6 +73,23 @@ export const createPost = (post: RawPost): Post => ({
     comments: post.comments ? (post.comments as List<Comment>).data : [],
 })
 
+export const upsertPost = async (db: PouchDB.Database, post: Post) => {
+    try {
+        const prev = await db.get<Post>(post._id)
+        console.log('PREV', prev)
+        console.log('NEXT', post)
+        if (new Date(post.updated) > new Date(prev.updated)) {
+            await db.upsert(post._id, () => post)
+            return { updated: true, _id: post._id }
+        }
+        return { updated: false, _id: post._id }
+    } catch (err) {
+        log.error(err)
+        await db.put<Post>(post)
+        return { updated: true, _id: post._id }
+    }
+}
+
 export const spider = async (
     db: PouchDB.Database,
     initUrl: string,
@@ -86,16 +103,16 @@ export const spider = async (
 
         log.info(`num posts ${data.length}`)
         const posts: Post[] = data.map(createPost)
-
+        console.log('posts', posts)
         const results = await Promise.all(
-            posts.map(async (post: Post) => db.putIfNotExists<Post>(post)),
+            posts.map((post) => upsertPost(db, post)),
         )
 
         console.log('RESULTS', results)
 
         const proceed =
             data.length > 0 &&
-            (some(results.map((result) => result.updated)) ||
+            (some(results.map(({ updated }) => updated)) ||
                 conf.facebook.incremental === false) &&
             paging !== undefined &&
             page < (conf.facebook.pageLimit || conf.facebook.pageLimit === 0)
