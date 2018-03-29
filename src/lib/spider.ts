@@ -22,7 +22,7 @@ export const spider = async (
         const { data, paging } = await fetchPage(url)
 
         log.info(`${tag(group)} num posts ${data.length}`)
-        const posts: Post[] = data.map(createPost)
+        const posts: Post[] = data.map((post) => createPost(post, members))
         const results = await Promise.all(
             posts.map((post) => upsertPost(db, post)),
         )

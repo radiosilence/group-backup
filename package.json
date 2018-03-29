@@ -22,10 +22,12 @@
   "homepage": "https://github.com/radiosilence/group-backup#readme",
   "dependencies": {
     "@types/chalk": "2.2.0",
+    "@types/escape-string-regexp": "0.0.32",
     "@types/pouchdb-upsert": "2.2.3",
     "bluebird": "3.5.1",
     "chalk": "2.3.2",
     "config": "1.30.0",
+    "escape-string-regexp": "1.0.5",
     "fixed-width-string": "1.0.0",
     "got": "8.3.0",
     "inflected": "2.0.4",

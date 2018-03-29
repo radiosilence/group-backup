@@ -26,7 +26,7 @@ export interface RawPost {
     created_time: string
     updated_time: string
     from: Person
-    comments?: List<Comment>
+    comments?: List<RawComment>
 }
 
 export interface Person {
@@ -41,4 +41,18 @@ export interface Post {
     created: Date
     from: Person
     comments: Comment[]
+}
+
+export interface RawComment {
+    id: string
+    created_time: string
+    message: string
+    from: Person
+}
+
+export interface Comment {
+    _id: string
+    created: Date
+    message: string
+    from: Person
 }

@@ -24,6 +24,9 @@ export const fetchMembers = async (group: Group): Promise<Person[]> => {
             break
         }
         members = [...members, ...data]
+        if (!paging.next) {
+            break
+        }
         url = paging.next
     }
     return members
