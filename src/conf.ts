@@ -1,12 +1,12 @@
 import * as config from 'config'
 
-export interface GroupConf {
+export interface Group {
     name: string
     id: number
 }
 
 export interface FacebookConf {
-    groups: GroupConf[]
+    groups: Group[]
     pageLimit: number
     accessToken: string
     apiVersion: string

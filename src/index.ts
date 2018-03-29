@@ -7,7 +7,7 @@ import * as PouchDB from 'pouchdb'
 import * as upsert from 'pouchdb-upsert'
 import { parameterize } from 'inflected'
 import { log } from './log'
-import conf, { GroupConf } from './conf'
+import conf, { Group } from './conf'
 
 PouchDB.plugin(upsert)
 
@@ -27,10 +27,6 @@ export interface RawPost {
     updated_time: string
     from: Person
     comments?: List<Comment>
-}
-
-export interface GroupResult extends GroupConf {
-    posts: RawPost[]
 }
 
 export interface Person {
@@ -103,17 +99,16 @@ export const spider = async (
 
         log.info(`num posts ${data.length}`)
         const posts: Post[] = data.map(createPost)
-        console.log('posts', posts)
         const results = await Promise.all(
             posts.map((post) => upsertPost(db, post)),
         )
 
-        console.log('RESULTS', results)
+        const numUpdated = results.filter(({ updated }) => updated).length
+        log.info(`updated ${numUpdated}/${results.length}`)
 
         const proceed =
             data.length > 0 &&
-            (some(results.map(({ updated }) => updated)) ||
-                conf.facebook.incremental === false) &&
+            (numUpdated > 0 || conf.facebook.incremental === false) &&
             paging !== undefined &&
             page < (conf.facebook.pageLimit || conf.facebook.pageLimit === 0)
 
@@ -124,15 +119,24 @@ export const spider = async (
     }
 }
 
+export const dump = async (db: PouchDB.Database, group: Group) => {
+    log.info(`dumping to yaml ${group.name}`)
+    fs.writeFileSync(
+        `./dumps/${parameterize(group.name)}.yml`,
+        safeDump(await db.allDocs()),
+    )
+}
+
 Promise.all(
-    conf.facebook.groups.map(async ({ id }: GroupConf) => {
-        const db = new PouchDB(`backups/group-${id}`, {})
+    conf.facebook.groups.map(async (group: Group) => {
+        const db = new PouchDB(`backups/group-${group.id}`, {})
         log.info('db info', await db.info())
         try {
             await spider(
                 db,
-                `https://graph.facebook.com/${apiVersion}/${id}/feed`,
+                `https://graph.facebook.com/${apiVersion}/${group.id}/feed`,
             )
+            await dump(db, group)
         } catch (err) {
             log.error(err, err.body)
             throw err

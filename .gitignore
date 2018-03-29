@@ -16,3 +16,5 @@ config/local.*
 
 backups
 !backups/.stub
+dumps
+!dumps/.stub
