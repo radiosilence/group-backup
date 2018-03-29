@@ -13,6 +13,10 @@ export const spider = async (
 ): Promise<void> => {
     let url = initUrl
     let page = 0
+    log.info(`${tag(group)} spidering group`, group)
+    if (members) {
+        log.info(`${tag(group)} redacting ${members.length} members`)
+    }
     while (true) {
         log.info(`${tag(group)} spidering page ${page++} ${url}`)
         const { data, paging } = await fetchPage(url)
