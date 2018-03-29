@@ -6,6 +6,8 @@ import { parse } from 'qs'
 import * as PouchDB from 'pouchdb'
 import * as upsert from 'pouchdb-upsert'
 import { parameterize } from 'inflected'
+import * as fws from 'fixed-width-string'
+import chalk from 'chalk'
 import { log } from './log'
 import conf, { Group } from './conf'
 
@@ -52,7 +54,11 @@ const FIELDS = [
     'updated_time',
     'full_picture',
     'picture',
+    'attachments{title,type,url,description}',
 ]
+
+export const tag = (group: Group) =>
+    chalk.cyanBright(`[${fws(group.name, 20)}]`)
 
 export const fetchPage = async (nextUrl: string): Promise<List<RawPost>> => {
     const [url, query] = nextUrl.split('?')
@@ -96,23 +102,23 @@ export const upsertPost = async (db: PouchDB.Database, post: Post) => {
 
 export const spider = async (
     db: PouchDB.Database,
+    group: Group,
     initUrl: string,
     page: number = 0,
 ): Promise<void> => {
     let url = initUrl
     while (true) {
-        log.info(`spidering page ${page++} ${url}`)
+        log.info(`${tag(group)} spidering page ${page++} ${url}`)
         const { data, paging } = await fetchPage(url)
-        log.info(`paging`, paging)
 
-        log.info(`num posts ${data.length}`)
+        log.info(`${tag(group)} num posts ${data.length}`)
         const posts: Post[] = data.map(createPost)
         const results = await Promise.all(
             posts.map((post) => upsertPost(db, post)),
         )
 
         const numUpdated = results.filter(({ updated }) => updated).length
-        log.info(`updated ${numUpdated}/${results.length}`)
+        log.info(`${tag(group)} ${numUpdated}/${results.length} updated`)
 
         const proceed =
             data.length > 0 &&
@@ -121,6 +127,7 @@ export const spider = async (
             page < (conf.facebook.pageLimit || conf.facebook.pageLimit === 0)
 
         if (!proceed) {
+            log.info(`${tag(group)} finishing...`)
             break
         }
         url = paging.next
@@ -128,7 +135,7 @@ export const spider = async (
 }
 
 export const dump = async (db: PouchDB.Database, group: Group) => {
-    log.info(`dumping to yaml ${group.name}`)
+    log.info(`${tag(group)} dumping to yaml`)
     fs.writeFileSync(
         `./dumps/${parameterize(group.name)}.yml`,
         safeDump(await db.allDocs({ include_docs: true })),
@@ -138,10 +145,11 @@ export const dump = async (db: PouchDB.Database, group: Group) => {
 Promise.all(
     conf.facebook.groups.map(async (group: Group) => {
         const db = new PouchDB(`backups/group-${group.id}`, {})
-        log.info('db info', await db.info())
+        log.info(`${tag(group)} db info`, await db.info())
         try {
             await spider(
                 db,
+                group,
                 `https://graph.facebook.com/${apiVersion}/${group.id}/feed`,
             )
             await dump(db, group)
