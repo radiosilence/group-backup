@@ -1,6 +1,7 @@
 export interface Group {
     name: string
     id: number
+    redact: boolean
 }
 
 export interface FacebookConf {
@@ -9,7 +10,6 @@ export interface FacebookConf {
     accessToken: string
     apiVersion: string
     incremental: boolean
-    redactMembers: boolean
     fields: string[]
 }
 

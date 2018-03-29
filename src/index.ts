@@ -7,13 +7,13 @@ import { log } from './log'
 
 PouchDB.plugin(upsert)
 
-const { apiVersion, accessToken, pageLimit, redactMembers } = conf.facebook
+const { apiVersion, accessToken, pageLimit } = conf.facebook
 
 Promise.all(
     conf.facebook.groups.map(async (group: Group) => {
         const db = new PouchDB(`backups/group-${group.id}`, {})
         log.info(`${tag(group)} db info`, await db.info())
-        const members = redactMembers ? await fetchMembers(group) : false
+        const members = group.redact ? await fetchMembers(group) : false
         try {
             await spider(
                 db,
