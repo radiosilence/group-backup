@@ -1,5 +1,6 @@
 export * from './dump'
 export * from './group'
+export * from './members'
 export * from './post'
 // export * from './redact'
 export * from './utils'
