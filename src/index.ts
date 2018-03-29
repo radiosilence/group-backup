@@ -43,8 +43,16 @@ export interface Post {
     comments: Comment[]
 }
 
-const FIELDS =
-    'id,comments{from,message,created_time},message,from,created_time,updated_time'
+const FIELDS = [
+    'id',
+    'comments{from,message,created_time,attachment}',
+    'message',
+    'from',
+    'created_time',
+    'updated_time',
+    'full_picture',
+    'picture',
+]
 
 export const fetchPage = async (nextUrl: string): Promise<List<RawPost>> => {
     const [url, query] = nextUrl.split('?')
@@ -53,7 +61,7 @@ export const fetchPage = async (nextUrl: string): Promise<List<RawPost>> => {
         query: {
             ...parse(query),
             access_token: accessToken,
-            fields: FIELDS,
+            fields: FIELDS.join(','),
             limit: 100,
         },
     })
@@ -123,7 +131,7 @@ export const dump = async (db: PouchDB.Database, group: Group) => {
     log.info(`dumping to yaml ${group.name}`)
     fs.writeFileSync(
         `./dumps/${parameterize(group.name)}.yml`,
-        safeDump(await db.allDocs()),
+        safeDump(await db.allDocs({ include_docs: true })),
     )
 }
 
