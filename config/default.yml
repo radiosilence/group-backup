@@ -7,3 +7,14 @@ facebook:
       id: GROUP_ID
 
   accessToken: ACCESS_TOKEN
+  redactMembers: false
+  fields:
+  - id
+  - comments{from,message,created_time,attachment}
+  - message
+  - from
+  - created_time
+  - updated_time
+  - full_picture
+  - picture
+  - attachments{title,type,url,description}
