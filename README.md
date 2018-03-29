@@ -54,4 +54,3 @@ Then your group backup should be output in the same folder as
 
 This file a YAML file, it is basically a text file but with structured data that
 is fairly human readable but also readable to computers.
-

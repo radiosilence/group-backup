@@ -1,4 +1,4 @@
-import { Group, Post } from '../interfaces'
+import { Group, Post, Person } from '../interfaces'
 import conf from '../conf'
 import { fetchPage } from './group'
 import { createPost, upsertPost } from './post'
@@ -9,9 +9,10 @@ export const spider = async (
     db: PouchDB.Database,
     group: Group,
     initUrl: string,
-    page: number = 0,
+    members: Person[] | false,
 ): Promise<void> => {
     let url = initUrl
+    let page = 0
     while (true) {
         log.info(`${tag(group)} spidering page ${page++} ${url}`)
         const { data, paging } = await fetchPage(url)
