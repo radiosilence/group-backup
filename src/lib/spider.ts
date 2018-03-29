@@ -18,7 +18,7 @@ export const spider = async (
         log.info(`${tag(group)} redacting ${members.length} members`)
     }
     while (true) {
-        log.info(`${tag(group)} spidering page ${page++} ${url}`)
+        log.info(`${tag(group)} spidering page ${page++}`)
         const { data, paging } = await fetchPage(url)
 
         log.info(`${tag(group)} num posts ${data.length}`)
@@ -34,7 +34,7 @@ export const spider = async (
             data.length > 0 &&
             (numUpdated > 0 || conf.facebook.incremental === false) &&
             paging !== undefined &&
-            page < (conf.facebook.pageLimit || conf.facebook.pageLimit === 0)
+            (page < conf.facebook.pageLimit || conf.facebook.pageLimit === 0)
 
         if (!proceed) {
             log.info(`${tag(group)} finishing...`)
