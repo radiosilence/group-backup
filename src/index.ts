@@ -76,17 +76,17 @@ export const createPost = (post: RawPost): Post => ({
 export const upsertPost = async (db: PouchDB.Database, post: Post) => {
     try {
         const prev = await db.get<Post>(post._id)
-        console.log('PREV', prev)
-        console.log('NEXT', post)
         if (new Date(post.updated) > new Date(prev.updated)) {
             await db.upsert(post._id, () => post)
             return { updated: true, _id: post._id }
         }
         return { updated: false, _id: post._id }
     } catch (err) {
-        log.error(err)
-        await db.put<Post>(post)
-        return { updated: true, _id: post._id }
+        if (err.status === 404) {
+            await db.put<Post>(post)
+            return { updated: true, _id: post._id }
+        }
+        throw err
     }
 }
 
@@ -126,7 +126,7 @@ export const spider = async (
 
 Promise.all(
     conf.facebook.groups.map(async ({ id }: GroupConf) => {
-        const db = new PouchDB(`${id}`, {})
+        const db = new PouchDB(`backups/group-${id}`, {})
         log.info('db info', await db.info())
         try {
             await spider(
