@@ -1,6 +1,7 @@
 facebook:
   apiVersion: v2.12
   pageLimit: 0
+  incremental: false
   groups:
     - name: GROUP_NAME
       id: GROUP_ID

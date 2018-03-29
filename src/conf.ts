@@ -10,6 +10,7 @@ export interface FacebookConf {
     pageLimit: number
     accessToken: string
     apiVersion: string
+    incremental: boolean
 }
 
 const facebook = config.get<FacebookConf>('facebook')
