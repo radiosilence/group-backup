@@ -118,7 +118,7 @@ export const spider = async (
         )
 
         const numUpdated = results.filter(({ updated }) => updated).length
-        log.info(`${tag(group)} ${numUpdated}/${results.length} updated`)
+        log.info(`${tag(group)} ${numUpdated}/${results.length} new or updated`)
 
         const proceed =
             data.length > 0 &&
