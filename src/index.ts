@@ -58,7 +58,7 @@ const FIELDS = [
 ]
 
 export const tag = (group: Group) =>
-    chalk.cyanBright(`[${fws(group.name, 20)}]`)
+    chalk.cyanBright(`${fws(group.name, 25, { align: 'right' })} |`)
 
 export const fetchPage = async (nextUrl: string): Promise<List<RawPost>> => {
     const [url, query] = nextUrl.split('?')
