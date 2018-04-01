@@ -1,25 +1,33 @@
 import * as PouchDB from 'pouchdb'
-import { RawPost, Post, List, Person, Comment, RawComment } from '../interfaces'
+import {
+    RawPost,
+    Post,
+    List,
+    Person,
+    Comment,
+    RawComment,
+    Members,
+} from '../interfaces'
 import { redact } from './redact'
 
-export const parseComment = (
-    members: Person[] | false,
+export const createComment = (
+    members: Members,
     comment: RawComment,
 ): Comment => ({
     _id: comment.id,
-    from: comment.from,
+    from: !members ? comment.from : undefined,
     message: redact(members, comment.message),
     created: new Date(comment.created_time),
 })
 
-export const createPost = (post: RawPost, members: Person[] | false): Post => ({
+export const createPost = (members: Members, post: RawPost): Post => ({
     _id: `${post.id}`,
     message: redact(members, post.message),
-    from: post.from,
+    from: !members ? post.from : undefined,
     created: new Date(post.created_time),
     updated: new Date(post.updated_time),
     comments: post.comments
-        ? post.comments.data.map((c) => parseComment(members, c))
+        ? post.comments.data.map((c) => createComment(members, c))
         : [],
 })
 

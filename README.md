@@ -13,7 +13,8 @@ So the script backs up a list of groups.
 Go to [Graph API explorer](https://developers.facebook.com/tools/explorer) while
 logged into Facebook. There will be a box at the top that says "access token".
 
-Copy that and store it somewhere safe for later
+Copy that and store it somewhere safe for later. You want to be getting a "User
+Access Token" and the only permission you need to check is `user_managed_groups`
 
 ## What to do
 

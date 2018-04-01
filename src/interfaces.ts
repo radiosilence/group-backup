@@ -39,7 +39,7 @@ export interface Post {
     message?: string
     updated: Date
     created: Date
-    from: Person
+    from?: Person
     comments: Comment[]
 }
 
@@ -54,7 +54,7 @@ export interface Comment {
     _id: string
     created: Date
     message: string
-    from: Person
+    from?: Person
 }
 
 export interface MembersResponse {
@@ -66,3 +66,5 @@ export interface MembersResponse {
         }
     }
 }
+
+export type Members = Person[] | false

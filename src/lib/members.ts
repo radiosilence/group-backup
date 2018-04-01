@@ -1,5 +1,5 @@
 import conf from '../conf'
-import { List, Person, Group } from '../interfaces'
+import { List, Person, Group, Members } from '../interfaces'
 import { Response, get } from 'got'
 import { tag } from './utils'
 import { log } from '../log'
@@ -7,7 +7,7 @@ import { parse } from 'qs'
 
 const { facebook: { apiVersion } } = conf
 
-export const fetchMembers = async (group: Group): Promise<Person[]> => {
+export const fetchMembers = async (group: Group): Promise<Members> => {
     let url = `https://graph.facebook.com/${apiVersion}/${group.id}/members`
     let query = {}
     let members: Person[] = []
