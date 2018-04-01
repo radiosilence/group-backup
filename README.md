@@ -16,6 +16,7 @@ logged into Facebook. There will be a box at the top that says "access token".
 Copy that and store it somewhere safe for later. You want to be getting a "User
 Access Token" and the only permission you need to check is `user_managed_groups`
 
+
 ## What to do
 
 ### 1. Clone/download this script
@@ -55,3 +56,5 @@ Then your group backup should be output in the same folder as
 
 This file a YAML file, it is basically a text file but with structured data that
 is fairly human readable but also readable to computers.
+
+Hi KJ!!!
