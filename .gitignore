@@ -17,4 +17,4 @@ config/local.*
 backups
 !backups/.stub
 dumps
-!dumps/.stub
+!dumps/.stub.DS_Store
