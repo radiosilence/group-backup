@@ -5,6 +5,8 @@ export interface Group {
 }
 
 export interface FacebookConf {
+    appId: string
+    appSecret: string
     groups: Group[]
     pageLimit: number
     accessToken: string

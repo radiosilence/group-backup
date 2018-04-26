@@ -1,0 +1,13 @@
+{
+  "watch": [
+    "dist"
+  ],
+  "ext": "js",
+  "ignore": [
+    "src/**/*.spec.ts"
+  ],
+  "exec": "node ./bin/app",
+  "env": {
+    "NODE_ENV": "devnew"
+  }
+}
