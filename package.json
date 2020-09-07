@@ -47,7 +47,7 @@
     "@types/config": "0.0.34",
     "@types/got": "7.1.8",
     "@types/inflected": "1.1.29",
-    "@types/jest": "22.2.2",
+    "@types/jest": "26.0.13",
     "@types/js-yaml": "3.11.0",
     "@types/koa": "2.0.45",
     "@types/koa-router": "7.0.28",
